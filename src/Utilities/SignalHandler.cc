@@ -10,7 +10,7 @@
 #include "SignalHandler.h"
 #include "QGCApplication.h"
 #include "QGCLoggingCategory.h"
-
+#include <unistd.h>
 #include <QtCore/QGlobalStatic>
 #include <QtCore/QSocketNotifier>
 #include <QtQuick/QQuickWindow>

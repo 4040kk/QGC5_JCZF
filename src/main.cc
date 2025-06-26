@@ -31,6 +31,7 @@
 
 #ifdef Q_OS_LINUX
 #ifndef Q_OS_ANDROID
+    #include <unistd.h>
     #include "SignalHandler.h"
 #endif
 #endif
@@ -189,7 +190,7 @@ int main(int argc, char *argv[])
     (void) SignalHandler::setupSignalHandlers();
 #endif
 #endif
-
+    qDebug()<<"qpp begin";
     app.init();
 
     // Set system ID if specified via command line, for example --system-id:255
