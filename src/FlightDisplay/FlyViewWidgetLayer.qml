@@ -101,7 +101,7 @@ Item {
         id:                 bottomRightRowLayout
         anchors.margins:    _layoutMargin
         anchors.bottom:     parent.bottom
-        anchors.right:      parent.right
+        anchors.horizontalCenter:      parent.horizontalCenter
         spacing:            _layoutSpacing
 
         property real bottomEdgeRightInset:     height + _layoutMargin
@@ -198,7 +198,9 @@ Item {
     }
 
     VehicleWarnings {
-        anchors.centerIn:   parent
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.margins:    _toolsMargin
         z:                  QGroundControl.zOrderTopMost
     }
 

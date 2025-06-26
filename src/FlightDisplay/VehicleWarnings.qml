@@ -17,7 +17,7 @@ Rectangle {
     anchors.margins:    -ScreenTools.defaultFontPixelHeight
     height:             warningsCol.height
     width:              warningsCol.width
-    color:              Qt.rgba(1, 1, 1, 0.5)
+    color:              "green"
     radius:             ScreenTools.defaultFontPixelWidth / 2
     visible:            _noGPSLockVisible || _prearmErrorVisible
 

@@ -15,12 +15,12 @@ import QGroundControl.Controls
 import QGroundControl.FlightDisplay
 
 RowLayout {
-    TelemetryValuesBar {
-        Layout.alignment:       Qt.AlignBottom
-        extraWidth:             instrumentPanel.extraValuesWidth
-        settingsGroup:          factValueGrid.telemetryBarSettingsGroup
-        specificVehicleForCard: null // Tracks active vehicle
-    }
+    //TelemetryValuesBar {
+    //    Layout.alignment:       Qt.AlignBottom
+    //    extraWidth:             instrumentPanel.extraValuesWidth
+    //    settingsGroup:          factValueGrid.telemetryBarSettingsGroup
+    //    specificVehicleForCard: null // Tracks active vehicle
+    //}
 
     FlyViewInstrumentPanel {
         id:                 instrumentPanel
