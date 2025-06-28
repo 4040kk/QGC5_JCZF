@@ -64,13 +64,23 @@ Rectangle {
         id:                     viewButtonRow
         anchors.bottomMargin:   1
         anchors.top:            parent.top
+        anchors.right:          parent.right
         anchors.bottom:         parent.bottom
         spacing:                ScreenTools.defaultFontPixelWidth / 2
+
+        QGCButton {
+            id:                 disconnectButton
+            anchors.right:       currentButton.left
+            text:               qsTr("Disconnect")
+            onClicked:          _activeVehicle.closeVehicle()
+//            visible:            _activeVehicle && _communicationLost
+            visible:            true
+        }
 
         QGCToolBarButton {
             id:                     currentButton
             Layout.preferredHeight: viewButtonRow.height
-            icon.source:            "/res/QGCLogoFull.svg"
+            icon.source:            "/res/gear-white.svg"
             logo:                   true
             onClicked:              mainWindow.showToolSelectDialog()
         }
@@ -79,14 +89,6 @@ Rectangle {
 //            id: mainStatusIndicator
 //            Layout.preferredHeight: viewButtonRow.height
 //        }
-
-        QGCButton {
-            id:                 disconnectButton
-            anchors.left:       currentButton.right
-            text:               qsTr("Disconnect")
-            onClicked:          _activeVehicle.closeVehicle()
-            visible:            _activeVehicle && _communicationLost
-        }
     }
     RowLayout {
         id:                        mainStatusmessge
@@ -105,14 +107,14 @@ Rectangle {
     QGCFlickable {
         id: toolsFlickable
         // 设置自身右侧紧贴父布局右侧
-        anchors.right: parent.right
+        anchors.right:  viewButtonRow.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom
 
         // 添加左侧锚点定位 - 基于自身右侧位置
         anchors.left: undefined  // 清除原有左侧锚点
         anchors.leftMargin: 0
-        anchors.rightMargin: ScreenTools.defaultFontPixelWidth/2
+        anchors.rightMargin: ScreenTools.defaultFontPixelWidth
 
         // 水平定位逻辑：从右侧开始向左延伸
         implicitWidth: toolIndicators.width

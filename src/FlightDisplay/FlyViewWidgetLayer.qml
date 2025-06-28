@@ -170,7 +170,7 @@ Item {
             }
         }
     }
-
+    //qi fei
     FlyViewToolStrip {
         id:                     toolStrip
         anchors.leftMargin:     _toolsMargin + parentToolInsets.leftEdgeCenterInset
@@ -180,7 +180,6 @@ Item {
         z:                      QGroundControl.zOrderWidgets
         maxHeight:              parent.height - y - parentToolInsets.bottomEdgeLeftInset - _toolsMargin
         visible:                !QGroundControl.videoManager.fullScreen
-
         onDisplayPreFlightChecklist: {
             if (!preFlightChecklistLoader.active) {
                 preFlightChecklistLoader.active = true
@@ -201,7 +200,7 @@ Item {
 //        anchors.centerIn:   parent
 //        z:                  QGroundControl.zOrderTopMost
 //    }
-
+    //+  -
     MapScale {
         id:                 mapScale
         anchors.margins:    _toolsMargin
@@ -210,7 +209,6 @@ Item {
         mapControl:         _mapControl
         buttonsOnLeft:      true
         visible:            !ScreenTools.isTinyScreen && QGroundControl.corePlugin.options.flyView.showMapScale && !isViewer3DOpen && mapControl.pipState.state === mapControl.pipState.fullState
-
         property real topEdgeCenterInset: visible ? y + height : 0
     }
 
