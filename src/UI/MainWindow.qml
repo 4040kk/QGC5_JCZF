@@ -131,6 +131,11 @@ ApplicationWindow {
         toolDrawer.toolSource   = toolSource
         toolDrawer.toolIcon     = toolIcon
         toolDrawer.visible      = true
+//        console.log("[DEBUG] ToolDrawer properties updated:")
+//        console.log("  Title:  ", toolDrawer.toolTitle)
+//        console.log("  Source: ", toolDrawer.toolSource)
+//        console.log("  Icon:   ", toolDrawer.toolIcon)
+//        console.log("  Visible:", toolDrawer.visible)
     }
 
     function showAnalyzeTool() {
@@ -144,6 +149,7 @@ ApplicationWindow {
     function showVehicleConfigParametersPage() {
         showVehicleConfig()
         toolDrawerLoader.item.showParametersPanel()
+        console.log("\n\n\nshowVehicleConfig")
     }
 
     function showKnownVehicleComponentConfigPage(knownVehicleComponent) {
@@ -152,6 +158,7 @@ ApplicationWindow {
         if (vehicleComponent) {
             toolDrawerLoader.item.showVehicleComponentPanel(vehicleComponent)
         }
+        console.log("\n\n\showKnownVehicleComponentConfigPage")
     }
 
     function showSettingsTool(settingsPage = "") {
@@ -166,11 +173,13 @@ ApplicationWindow {
 
     function showMessageDialog(dialogTitle, dialogText, buttons = Dialog.Ok, acceptFunction = null, closeFunction = null) {
         simpleMessageDialogComponent.createObject(mainWindow, { title: dialogTitle, text: dialogText, buttons: buttons, acceptFunction: acceptFunction, closeFunction: closeFunction }).open()
+        console.log("\n\n\dhowMessageDialog")
     }
 
     // This variant is only meant to be called by QGCApplication
     function _showMessageDialog(dialogTitle, dialogText) {
         showMessageDialog(dialogTitle, dialogText)
+        console.log("\n\n\dialogText")
     }
 
     Component {

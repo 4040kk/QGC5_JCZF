@@ -197,12 +197,10 @@ Item {
         id: gripperOptions
     }
 
-    VehicleWarnings {
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        anchors.margins:    _toolsMargin
-        z:                  QGroundControl.zOrderTopMost
-    }
+//    VehicleWarnings {
+//        anchors.centerIn:   parent
+//        z:                  QGroundControl.zOrderTopMost
+//    }
 
     MapScale {
         id:                 mapScale

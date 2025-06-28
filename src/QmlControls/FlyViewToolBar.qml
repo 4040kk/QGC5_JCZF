@@ -23,8 +23,8 @@ Rectangle {
     id:     _root
     width:  parent.width
     height: ScreenTools.toolbarHeight
-    color:  qgcPal.toolbarBackground
-
+    color:  qgcPal.zcjf_toolbarBackground
+    //color:  "blue"
     property var    _activeVehicle:     QGroundControl.multiVehicleManager.activeVehicle
     property bool   _communicationLost: _activeVehicle ? _activeVehicle.vehicleLinkManager.communicationLost : false
     property color  _mainStatusBGColor: qgcPal.brandingPurple
@@ -44,18 +44,22 @@ Rectangle {
         color:          "black"
         visible:        qgcPal.globalTheme === QGCPalette.Light
     }
-
+    //zhuang tai color
     Rectangle {
-        anchors.fill: viewButtonRow
-        
+        anchors.right: mainStatusmessge.left
+        anchors.left:  parent.left
+        anchors.top:   parent.top
+        anchors.bottom:  parent.bottom
+//        anchors.fill: viewButtonRow
         gradient: Gradient {
             orientation: Gradient.Horizontal
-            GradientStop { position: 0;                                     color: _mainStatusBGColor }
-            GradientStop { position: currentButton.x + currentButton.width; color: _mainStatusBGColor }
-            GradientStop { position: 1;                                     color: _root.color }
+            GradientStop { position: 0;                                          color: _mainStatusBGColor }
+            GradientStop { position: 0.2;                                        color: _root.color  }
+            GradientStop { position: 0.5;                                          color: _root.color }
         }
     }
 
+    //messge logo
     RowLayout {
         id:                     viewButtonRow
         anchors.bottomMargin:   1
@@ -71,34 +75,61 @@ Rectangle {
             onClicked:              mainWindow.showToolSelectDialog()
         }
 
-        MainStatusIndicator {
-            id: mainStatusIndicator
-            Layout.preferredHeight: viewButtonRow.height
-        }
+//        MainStatusIndicator {
+//            id: mainStatusIndicator
+//            Layout.preferredHeight: viewButtonRow.height
+//        }
 
         QGCButton {
             id:                 disconnectButton
+            anchors.left:       currentButton.right
             text:               qsTr("Disconnect")
             onClicked:          _activeVehicle.closeVehicle()
             visible:            _activeVehicle && _communicationLost
         }
     }
-
-    QGCFlickable {
-        id:                     toolsFlickable
-        anchors.leftMargin:     ScreenTools.defaultFontPixelWidth * ScreenTools.largeFontPointRatio * 1.5
-        anchors.rightMargin:    ScreenTools.defaultFontPixelWidth / 2
-        anchors.left:           viewButtonRow.right
+    RowLayout {
+        id:                        mainStatusmessge
         anchors.bottomMargin:   1
+        anchors.horizontalCenter:   parent.horizontalCenter
         anchors.top:            parent.top
         anchors.bottom:         parent.bottom
-        anchors.right:          parent.right
-        contentWidth:           toolIndicators.width
-        flickableDirection:     Flickable.HorizontalFlick
-
-        FlyViewToolBarIndicators { id: toolIndicators }
+        spacing:                ScreenTools.defaultFontPixelWidth / 2
+        MainStatusIndicator {
+            id: mainStatusIndicator
+            Layout.preferredHeight: viewButtonRow.height
+        }
     }
 
+//  stuta zhuangt tai lan
+    QGCFlickable {
+        id: toolsFlickable
+        // 设置自身右侧紧贴父布局右侧
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+
+        // 添加左侧锚点定位 - 基于自身右侧位置
+        anchors.left: undefined  // 清除原有左侧锚点
+        anchors.leftMargin: 0
+        anchors.rightMargin: ScreenTools.defaultFontPixelWidth/2
+
+        // 水平定位逻辑：从右侧开始向左延伸
+        implicitWidth: toolIndicators.width
+        contentWidth: toolIndicators.width
+
+        flickableDirection: Flickable.HorizontalFlick
+        FlyViewToolBarIndicators { id: toolIndicators }
+
+        // 确保内容从右侧开始布局
+        Component.onCompleted: {
+            if (contentWidth < width) {
+                contentX = contentWidth - width;
+            }
+        }
+    }
+
+    //firmware LOGO
     //-------------------------------------------------------------------------
     //-- Branding Logo
     Image {
@@ -106,11 +137,10 @@ Rectangle {
         anchors.top:            parent.top
         anchors.bottom:         parent.bottom
         anchors.margins:        ScreenTools.defaultFontPixelHeight * 0.66
-        visible:                _activeVehicle && !_communicationLost && x > (toolsFlickable.x + toolsFlickable.contentWidth + ScreenTools.defaultFontPixelWidth)
+        //visible:                _activeVehicle && !_communicationLost && x > (toolsFlickable.x + toolsFlickable.contentWidth + ScreenTools.defaultFontPixelWidth)
         fillMode:               Image.PreserveAspectFit
         source:                 _outdoorPalette ? _brandImageOutdoor : _brandImageIndoor
         mipmap:                 true
-
         property bool   _outdoorPalette:        qgcPal.globalTheme === QGCPalette.Light
         property bool   _corePluginBranding:    QGroundControl.corePlugin.brandImageIndoor.length != 0
         property string _userBrandImageIndoor:  QGroundControl.settingsManager.brandImageSettings.userBrandImageIndoor.value
@@ -119,6 +149,7 @@ Rectangle {
         property bool   _userBrandingOutdoor:   QGroundControl.settingsManager.brandImageSettings.visible && _userBrandImageOutdoor.length != 0
         property string _brandImageIndoor:      brandImageIndoor()
         property string _brandImageOutdoor:     brandImageOutdoor()
+        visible:                false
 
         function brandImageIndoor() {
             if (_userBrandingIndoor) {
@@ -160,6 +191,7 @@ Rectangle {
         width:          _activeVehicle ? _activeVehicle.loadProgress * parent.width : 0
         color:          qgcPal.colorGreen
         visible:        !largeProgressBar.visible
+
     }
 
     // Large parameter download progress bar
