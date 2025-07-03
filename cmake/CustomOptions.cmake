@@ -7,7 +7,7 @@ include(CMakeDependentOption)
 # This option is only available when building for Android. Usage of this option for something other than integrated
 # controllers workaround is not supported and will likely cause issues.
 option(QGC_ENABLE_HERELINK "Enable Herelink Support" OFF)
-
+ 
 # App
 set(QGC_APP_NAME "QGroundControl" CACHE STRING "App Name")
 set(QGC_APP_COPYRIGHT "Copyright (c) 2025 QGroundControl. All rights reserved." CACHE STRING "Copyright")
