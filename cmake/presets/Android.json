@@ -1,6 +1,9 @@
 {
   "version": 6,
   "include": ["common.json"],
+  "architectures": {
+    "armeabi-v7a":"armeabi-v7a"
+  },
   "configurePresets": [
     {
       "name": "Android",

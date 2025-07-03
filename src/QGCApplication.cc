@@ -200,7 +200,7 @@ QGCApplication::QGCApplication(int &argc, char *argv[], bool unitTesting, bool s
 
     // Set up our logging filters
     QGCLoggingCategoryRegister::instance()->setFilterRulesFromSettings(loggingOptions);
-
+    qDebug()<<"IN setlanguage \n\n\n";
     // We need to set language as early as possible prior to loading on JSON files.
     setLanguage();
 
@@ -212,7 +212,7 @@ QGCApplication::QGCApplication(int &argc, char *argv[], bool unitTesting, bool s
 void QGCApplication::setLanguage()
 {
     _locale = QLocale::system();
-    qCDebug(QGCApplicationLog) << "System reported locale:" << _locale << "; Name" << _locale.name() << "; Preffered (used in maps): " << (QLocale::system().uiLanguages().length() > 0 ? QLocale::system().uiLanguages()[0] : "None");
+    qDebug() << "System reported locale:" << _locale << "; Name" << _locale.name() << "; Preffered (used in maps): " << (QLocale::system().uiLanguages().length() > 0 ? QLocale::system().uiLanguages()[0] : "None");
 
     QLocale::Language possibleLocale = AppSettings::_qLocaleLanguageEarlyAccess();
     if (possibleLocale != QLocale::AnyLanguage) {
@@ -228,6 +228,7 @@ void QGCApplication::setLanguage()
             qCWarning(QGCApplicationLog) << "Could not load /fonts/NanumGothic-Bold font";
         }
     }
+
     qCDebug(QGCApplicationLog) << "Loading localizations for" << _locale.name();
     removeTranslator(JsonHelper::translator());
     removeTranslator(&_qgcTranslatorSourceCode);

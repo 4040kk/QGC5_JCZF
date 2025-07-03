@@ -128,11 +128,13 @@ Item {
     Connections {
         target: QGroundControl.settingsManager.appSettings.appFontPointSize
         function onValueChanged() {
+            console.log("data in 1");
             _setBasePointSize(QGroundControl.settingsManager.appSettings.appFontPointSize.value)
         }
     }
 
     onRealPixelDensityChanged: {
+        console.log("data in 2");
         _setBasePointSize(defaultFontPointSize)
     }
 
@@ -209,6 +211,7 @@ Item {
                 baseSize = platformFontPointSize;
                 _appFontPointSizeFact.value = baseSize
             }
+
             //-- Set size saved in settings
             _screenTools._setBasePointSize(baseSize);
         }

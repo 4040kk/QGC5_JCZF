@@ -22,16 +22,17 @@ import QGroundControl.Controllers
 Rectangle {
     id:     _root
     width:  parent.width
-    height: ScreenTools.toolbarHeight
+    height: ScreenTools.toolbarHeight*_selfscale
     color:  qgcPal.zcjf_toolbarBackground
     //color:  "blue"
     property var    _activeVehicle:     QGroundControl.multiVehicleManager.activeVehicle
     property bool   _communicationLost: _activeVehicle ? _activeVehicle.vehicleLinkManager.communicationLost : false
     property color  _mainStatusBGColor: qgcPal.brandingPurple
-
+    property real   _selfscale: 1
     function dropMainStatusIndicatorTool() {
         mainStatusIndicator.dropMainStatusIndicator();
     }
+
 
     QGCPalette { id: qgcPal }
 
@@ -66,12 +67,12 @@ Rectangle {
         anchors.top:            parent.top
         anchors.right:          parent.right
         anchors.bottom:         parent.bottom
-        spacing:                ScreenTools.defaultFontPixelWidth / 2
+        spacing:                ScreenTools.defaultFontPixelWidth * _selfscale / 2
 
         QGCButton {
             id:                 disconnectButton
             anchors.right:       currentButton.left
-            text:               qsTr("Disconnect")
+            text:               _activeVehicle  ? qsTr("Disconnect") : qsTr("Notconnect")
             onClicked:          _activeVehicle.closeVehicle()
 //            visible:            _activeVehicle && _communicationLost
             visible:            true
@@ -96,7 +97,7 @@ Rectangle {
         anchors.horizontalCenter:   parent.horizontalCenter
         anchors.top:            parent.top
         anchors.bottom:         parent.bottom
-        spacing:                ScreenTools.defaultFontPixelWidth / 2
+        spacing:                ScreenTools.defaultFontPixelWidth *_selfscale / 2
         MainStatusIndicator {
             id: mainStatusIndicator
             Layout.preferredHeight: viewButtonRow.height
@@ -114,7 +115,7 @@ Rectangle {
         // 添加左侧锚点定位 - 基于自身右侧位置
         anchors.left: undefined  // 清除原有左侧锚点
         anchors.leftMargin: 0
-        anchors.rightMargin: ScreenTools.defaultFontPixelWidth
+        anchors.rightMargin: ScreenTools.defaultFontPixelWidth *_selfscale
 
         // 水平定位逻辑：从右侧开始向左延伸
         implicitWidth: toolIndicators.width
@@ -138,7 +139,7 @@ Rectangle {
         anchors.right:          parent.right
         anchors.top:            parent.top
         anchors.bottom:         parent.bottom
-        anchors.margins:        ScreenTools.defaultFontPixelHeight * 0.66
+        anchors.margins:        ScreenTools.defaultFontPixelHeight * 0.66 *_selfscale
         //visible:                _activeVehicle && !_communicationLost && x > (toolsFlickable.x + toolsFlickable.contentWidth + ScreenTools.defaultFontPixelWidth)
         fillMode:               Image.PreserveAspectFit
         source:                 _outdoorPalette ? _brandImageOutdoor : _brandImageIndoor
@@ -225,7 +226,7 @@ Rectangle {
         QGCLabel {
             anchors.centerIn:   parent
             text:               qsTr("Downloading")
-            font.pointSize:     ScreenTools.largeFontPointSize
+            font.pointSize:     ScreenTools.largeFontPointSize *_selfscale
         }
 
         QGCLabel {
@@ -234,7 +235,7 @@ Rectangle {
             anchors.bottom:     parent.bottom
             text:               qsTr("Click anywhere to hide")
 
-            property real _margin: ScreenTools.defaultFontPixelWidth / 2
+            property real _margin: ScreenTools.defaultFontPixelWidth *_selfscale / 2
         }
 
         MouseArea {

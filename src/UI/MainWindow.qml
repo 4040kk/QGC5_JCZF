@@ -650,6 +650,7 @@ ApplicationWindow {
     //-- Indicator Drawer
 
     function showIndicatorDrawer(drawerComponent, indicatorItem) {
+        console.log(drawerComponent,indicatorItem);
         indicatorDrawer.sourceComponent = drawerComponent
         indicatorDrawer.indicatorItem = indicatorItem
         indicatorDrawer.open()
@@ -661,7 +662,8 @@ ApplicationWindow {
 
     Popup {
         id:             indicatorDrawer
-        x:              calcXPosition()
+        //x:              calcXPosition()
+        x:              mainWindow.contentItem.width
         y:              ScreenTools.toolbarHeight + _margins
         leftInset:      0
         rightInset:     0
@@ -672,7 +674,9 @@ ApplicationWindow {
         modal:          true
         focus:          true
         closePolicy:    Popup.CloseOnEscape | Popup.CloseOnPressOutside
+        signal          firstEnter()
 
+        property bool _InitFlag:    false
         property var sourceComponent
         property var indicatorItem
 
@@ -680,12 +684,18 @@ ApplicationWindow {
         property real _margins:     ScreenTools.defaultFontPixelHeight / 4
 
         function calcXPosition() {
-            if (indicatorItem) {
+             var avd = mainWindow.contentItem.width - contentItem.implicitWidth - _margins - (indicatorDrawer.padding * 2);
+
+            if(indicatorItem){
                 var xCenter = indicatorItem.mapToItem(mainWindow.contentItem, indicatorItem.width / 2, 0).x
                 return Math.max(_margins, Math.min(xCenter - (contentItem.implicitWidth / 2), mainWindow.contentItem.width - contentItem.implicitWidth - _margins - (indicatorDrawer.padding * 2) - (ScreenTools.defaultFontPixelHeight / 2)))
-            } else {
-                return _margins
+            }else{
+                if(indicatorDrawer._InitFlag)
+                    return mainWindow.contentItem.width - contentItem.implicitWidth - _margins - (indicatorDrawer.padding * 2);
+                else
+                    return mainWindow.contentItem.width;
             }
+
         }
 
         onOpened: {
@@ -721,16 +731,34 @@ ApplicationWindow {
                     anchors.centerIn:   parent
                     text:               ">"
                     color:              QGroundControl.globalPalette.buttonText
-                }  
+                }
 
                 QGCMouseArea {
                     fillItem: parent
-                    onClicked: indicatorDrawer._expanded = true
+                    onClicked: {
+                        indicatorDrawer._expanded = true;
+                        extenddelayTimer.start();
+                    }
+
+                    Timer {
+                        id: extenddelayTimer
+                        interval: 100 // 延迟 100 毫秒
+                        repeat: false
+                        onTriggered: {
+                            //console.log("loder finish\n\n\n");
+                            //console.log("Delayed width:", mainWindow.contentItem.width - indicatorDrawerLoaderFlickable.contentItem.implicitWidth - indicatorDrawer._margins - (indicatorDrawer.padding * 2));
+                            extendAnimation.start();
+                        }
+                    }
                 }
             }
         }
 
-        contentItem: QGCFlickable {
+        contentItem: Row{
+            anchors.centerIn: parent
+            width: mainWindow.width * 0.3
+            height: mainWindow.height *0.3
+            QGCFlickable {
             id:             indicatorDrawerLoaderFlickable
             implicitWidth:  Math.min(mainWindow.contentItem.width - (2 * indicatorDrawer._margins) - (indicatorDrawer.padding * 2), indicatorDrawerLoader.width)
             implicitHeight: Math.min(mainWindow.contentItem.height - ScreenTools.toolbarHeight - (2 * indicatorDrawer._margins) - (indicatorDrawer.padding * 2), indicatorDrawerLoader.height)
@@ -739,7 +767,28 @@ ApplicationWindow {
 
             Loader {
                 id: indicatorDrawerLoader
+                onStatusChanged: {
+                    if (status === Loader.Ready) {
+                        if(!indicatorDrawer._InitFlag){
+                            indicatorDrawer._InitFlag = true;
+                        }
+                        delayTimer.start();
 
+                    }
+                }
+
+                Timer {
+                    id: delayTimer
+                    interval: 100 // 延迟 100 毫秒
+                    repeat: false
+                    onTriggered: {
+                        //console.log("loder finish\n\n\n");
+                        //console.log("Delayed width:", mainWindow.contentItem.width - indicatorDrawerLoaderFlickable.contentItem.implicitWidth - indicatorDrawer._margins - (indicatorDrawer.padding * 2));
+                        enterAnimation.start();
+                        var xCenter = indicatorDrawer.indicatorItem.mapToItem(mainWindow.contentItem, indicatorDrawer.indicatorItem.width / 2, 0).x
+
+                    }
+                }
                 Binding {
                     target:     indicatorDrawerLoader.item
                     property:   "expanded"
@@ -751,6 +800,76 @@ ApplicationWindow {
                     property:   "drawer"
                     value:      indicatorDrawer
                 }
+            }
+        }
+        }
+
+        function calcXPositionextend(){
+
+            var xCenter =  indicatorDrawer.indicatorItem.mapToItem(mainWindow.contentItem, indicatorDrawerLoader.item.width / 2, 0).x;
+            var LxCenter = indicatorDrawer.indicatorItem.mapToItem(mainWindow.contentItem, indicatorDrawerLoader.item.width , 0).x;
+            var extendW =  indicatorDrawerLoader.item.width + indicatorDrawer._margins + indicatorDrawer.padding * 2;
+            var CendX    = xCenter + extendW/2;
+            var Lendx   =  LxCenter + extendW;
+            console.log("xCenter : ",xCenter,"   ",CendX,"   ",mainWindow.contentItem.width);
+
+                if(Lendx > mainWindow.contentItem.width){
+                    return mainWindow.contentItem.width - extendW ;
+                }else{
+                    return LxCenter;
+                }
+
+
+        }
+        NumberAnimation {
+            id: enterAnimation
+            target: indicatorDrawer
+            property: "x"
+            from: mainWindow.contentItem.width
+            to: indicatorDrawer.calcXPosition()
+            duration: 300
+            easing.type: Easing.OutCubic
+        }
+
+        NumberAnimation {
+            id: extendAnimation
+            target: indicatorDrawer
+            property: "x"
+            //mainWindow.contentItem.width
+            //Math.min(xCenter - (contentItem.implicitWidth / 2), mainWindow.contentItem.width - contentItem.implicitWidth - _margins - (indicatorDrawer.padding * 2) - (ScreenTools.defaultFontPixelHeight / 2))
+            //to: mainWindow.contentItem.width - indicatorDrawerLoader.item.width - indicatorDrawer._margins - indicatorDrawer.padding * 2
+            to:     indicatorDrawer.calcXPositionextend()
+            duration: 300
+            easing.type: Easing.OutCubic
+        }
+//        Transition {
+//                    // 使用 NumberAnimation 动画 x 属性
+//                    id:     enterAnimi
+//                    enabled: false
+//                    NumberAnimation {
+//                        properties: "x"
+//                        // 从屏幕宽度开始，动画到 calcXPosition() 计算出的最终位置
+//                        from: mainWindow.contentItem.width
+//                        to: indicatorDrawer.calcXPosition()
+//                        duration: 300 // 动画持续时间，单位毫秒
+//                        easing.type: Easing.OutCubic // 使用平滑的缓动函数
+//                    }
+//                }
+//        onFirstEnter: {
+//            console.log("in Loader\n\n")
+//            enterAnimi
+//        }
+
+       // enter: enterAnimi
+
+        // 添加 exit 动画，让弹窗滑动出去
+        exit: Transition {
+            NumberAnimation {
+                properties: "x"
+                // 从当前位置动画到屏幕右侧之外
+                to: mainWindow.contentItem.width
+                duration: 200 // 动画持续时间，可以比 enter 短一些
+                easing.type: Easing.InCubic // 使用平滑的缓动函数
             }
         }
     }
