@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.25)
 #/home/cwkj/Qt/6.8.3/gcc_64
 # 添加架构定义
-set(ANDROID_ABI "arm64-v8a")
 
 
 list(APPEND CMAKE_MODULE_PATH
