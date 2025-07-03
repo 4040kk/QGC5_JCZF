@@ -1,4 +1,4 @@
-include(CMakeDependentOption)
+include(CMakeDependentOption) 
 # The following options can be overriden by custom builds using the CustomOverrides.cmake file
 
 # Herelink integrated contollers only support Android 7.1. The latest version of Qt which supports this is 6.6.3.
