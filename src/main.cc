@@ -27,6 +27,7 @@
 
 #ifdef Q_OS_ANDROID
     #include "AndroidInterface.h"
+    #include <QJniObject>
 #endif
 
 #ifdef Q_OS_LINUX
@@ -192,7 +193,12 @@ int main(int argc, char *argv[])
 #endif
     qDebug()<<"qpp begin";
     app.init();
-
+    // #ifdef Q_OS_ANDROID
+    // QTimer::singleShot(1000, &app, [=](){
+    //     // 直接调用静态方法（仅限 Qt 6.5+）
+    //     QNativeInterface::QAndroidApplication::hideSplashScreen(500);
+    // });
+    // #endif
     // Set system ID if specified via command line, for example --system-id:255
     if (hasSystemId) {
         bool ok;

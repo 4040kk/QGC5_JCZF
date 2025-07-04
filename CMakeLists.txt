@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.25)
 #/home/cwkj/Qt/6.8.3/gcc_64
-# 添加架构定义
-
 
 list(APPEND CMAKE_MODULE_PATH
     ${CMAKE_SOURCE_DIR}/cmake
